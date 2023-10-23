@@ -1,4 +1,4 @@
-This file makes changes to the default tmux configuration. This file should be located in the home directory of a relevant user (~/.tmux.conf).
+This file makes changes to the default tmux configuration. This file should be located in the home directory of the relevant user (~/.tmux.conf).
 
 ### Dependencies
 - tmux
