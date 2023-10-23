@@ -1,1 +1,1 @@
-ZSH
+This folder contains all the .zshrc files used on my machines. I plan to condense these files into a single file, using if statements to specify specific configurations for each machine / user combination. This file will be stored in the home drive (~/.zshrc) of all users on machines that require it.
