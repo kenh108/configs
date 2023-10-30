@@ -1,0 +1,23 @@
+127.0.0.1       localhost
+127.0.1.1       debian-server.local     debian-server
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouter
+
+10.0.0.1 hy.int.kenh108.ie
+10.0.0.1 ovpn.int.kenh108.ie
+10.0.0.1 pr.int.kenh108.ie
+10.0.0.1 pt.int.kenh108.ie
+10.0.0.1 rd.int.kenh108.ie
+10.0.0.1 sb.int.kenh108.ie
+10.0.0.1 sn.int.kenh108.ie
+10.0.0.1 sr.int.kenh108.ie
+10.0.0.1 vw.int.kenh108.ie
+
+10.0.0.1 server.int.kenh108.ie
+10.0.0.2 pc.int.kenh108.ie
+10.0.0.3 laptop.int.kenh108.ie
+10.0.0.4 phone.int.kenh108.ie
+10.0.0.5 vps.int.kenh108.ie
