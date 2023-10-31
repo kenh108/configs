@@ -4,7 +4,6 @@ I followed this guide for most of the configuration: https://thevaluable.dev/tmu
 
 ### Dependencies
 - tmux
-- xclip
 
 ### Use
 Currently this will be used by whichever machine is being used to connect to the machines inside the VPN.
