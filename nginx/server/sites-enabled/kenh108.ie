@@ -1,0 +1,14 @@
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    ssl_certificate /etc/letsencrypt/live/kenh108.ie/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/kenh108.ie/privkey.pem;
+
+    server_name kenh108.ie;
+
+    location / {
+        return 301 https://www.kenh108.ie$request_uri;
+        include proxy_params;
+    }
+}
