@@ -1,0 +1,95 @@
+version: "3.9"
+services:
+    nginx:
+        container_name: nginx
+        image: nginx:latest
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ~/server/config/nginx:/etc/nginx/conf.d:ro
+            - /server/data/certbot/www:/var/www/certbot:ro
+            - /server/data/certbot/conf:/etc/nginx/ssl:ro
+        restart: unless-stopped
+        networks:
+            - nginx-proxy
+
+    certbot:
+        container_name: certbot
+        image: certbot/certbot:latest
+        volumes:
+            - /server/data/certbot/www:/var/www/certbot
+            - /server/data/certbot/conf:/etc/letsencrypt
+   
+    mailserver:
+        image: mailserver/docker-mailserver:latest
+        container_name: mailserver
+        hostname: mail
+        domainname: heeney.ie
+        env_file: /server/data/mailserver/mailserver.env
+        ports:
+            - "25:25"
+            - "143:143"
+            - "465:465"
+            - "587:587"
+            - "993:993"
+        volumes:
+            - /server/data/mailserver/docker-data/dms/mail-data/:/var/mail/
+            - /server/data/mailserver/docker-data/dms/mail-state/:/var/mail-state/
+            - /server/data/mailserver/docker-data/dms/mail-logs/:/var/log/mail/
+            - /server/data/mailserver/docker-data/dms/config/:/tmp/docker-mailserver/
+            - /server/data/certbot/conf:/etc/letsencrypt
+            - /etc/localtime:/etc/localtime:ro
+        restart: unless-stopped
+        stop_grace_period: 1m
+        cap_add:
+            - NET_ADMIN
+        healthcheck:
+            test: "ss --listening --tcp | grep -P 'LISTEN.+:smtp' || exit 1"
+            timeout: 3s
+            retries: 0
+    
+    db-heeney:
+        container_name: db-heeney
+        image: mariadb:latest
+        user: 1000:1000
+        volumes:
+            - /server/data/heeney-website/database:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=kenneth
+            - MYSQL_DATABASE=heeney_website
+            - MYSQL_USER=kenh108
+            - MYSQL_PASSWORD=kenneth
+        restart: unless-stopped
+        networks:
+            - nginx-proxy
+
+    wordpress:
+        container_name: wordpress
+        image: wordpress:latest
+        volumes:
+            - /server/data/kenh108-website/website:/var/www/html
+        environment:
+            - WORDPRESS_DB_HOST=db-heeney
+            - WORDPRESS_DB_USER=kenh108
+            - WORDPRESS_DB_PASSWORD=kenneth
+            - WORDPRESS_DB_NAME=heeney_website
+        restart: unless-stopped
+        depends_on:
+            - db-heeney
+        networks:
+            - nginx-proxy
+
+    searxng:
+        container_name: searxng
+        image: searxng/searxng:latest
+        volumes:
+            - ~/server/config/searxng:/etc/searxng
+        restart: unless-stopped
+        networks:
+            - nginx-proxy
+
+networks:
+    nginx-proxy:
+        name: nginx-bridge
+        driver: bridge
