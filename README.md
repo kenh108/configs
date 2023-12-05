@@ -1,5 +1,5 @@
-# configs
-Configs used for linux machines
+# Configs
+Configs used for my linux machines
 
 ## To do list
 - Upload docker configs to github
