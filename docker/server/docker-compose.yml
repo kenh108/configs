@@ -1,0 +1,240 @@
+version: "4.9"
+services:
+    jellyfin:
+        container_name: jellyfin
+        image: linuxserver/jellyfin:latest
+        ports:
+            - "8096:8096"
+        volumes:
+            - /server/data/jellyfin/config:/config
+            - /server/media/shows:/data/shows
+            - /server/media/movies:/data/movies
+            - /server/media/sports:/data/sports
+            - /server/media/abc:/data/abc
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - NVIDIA_VISIBLE_DEVICES=all
+            - NVIDIA_DRIVER_CAPABILITIES=all
+            - JELLYFIN_PublishedServerUrl=https://jf.kenh108.ie
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - capabilities: [gpu]
+        restart: unless-stopped
+    
+#    nginx: 
+#        container_name: nginx
+#        image: nginx:latest
+#        ports:
+#            - "80:80"
+#            - "443:443"
+#        volumes:
+#            - ~/server/config/nginx:/etc/nginx/conf.d:ro
+#            - /server/data/certbot/www:/var/www/certbot:ro
+#            - /server/data/certbot/conf:/etc/nginx/ssl:ro
+#        restart: unless-stopped
+#        networks:
+#            - nginx-proxy
+     
+#    certbot:
+#       container_name: certbot
+#       image: certbot/certbot:latest
+#       volumes:
+#           - /server/data/certbot/www:/var/www/certbot
+#           - /server/data/certbot/conf:/etc/letsencrypt
+
+    cloudflare-ddns:
+        container_name: cloudflare-ddns
+        image: oznu/cloudflare-ddns:latest
+        environment:
+            - API_KEY=tdruvDyClWUpdwcegxjqlgAVHjPyfR52qdXMI5Fm
+            - ZONE=kenh108.ie
+        restart: unless-stopped
+        
+    sonarr:
+        container_name: sonarr
+        image: linuxserver/sonarr:latest
+        ports:
+            - "8989:8989"
+        volumes:
+            - /server/data/sonarr/config:/config
+            - /server/media/shows:/tv
+            - /server/downloads/complete:/downloads
+        environment:
+            - PUID=1000
+            - PGID=1000
+        restart: unless-stopped
+
+    radarr:
+        container_name: radarr
+        image: linuxserver/radarr:latest
+        ports:
+            - "7878:7878"
+        volumes:
+            - /server/data/radarr/config:/config
+            - /server/downloads/complete:/downloads
+            - /server/media/movies:/movies
+        environment:
+            - PUID=1000
+            - PGID=1000
+        restart: unless-stopped
+
+    portainer:
+        container_name: portainer
+        image: portainer/portainer-ce:latest
+        ports:
+            - "9443:9443"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /server/data/portainer/data:/data
+        restart: unless-stopped
+
+    sabnzbd:
+        container_name: sabnzbd
+        image: linuxserver/sabnzbd:latest
+        ports:
+            - "5757:8080"
+        volumes:
+            - /server/data/sabnzbd/config:/config
+            - /server/media:/media
+            - /server/downloads/complete:/downloads
+            - /server/downloads/incomplete:/incomplete-downloads
+        environment:
+            - PUID=1000
+            - PGID=1000
+        restart: unless-stopped
+    
+    nzbhydra2:
+        container_name: nzbhydra2
+        image: linuxserver/nzbhydra2:latest
+        ports:
+            - "5076:5076"
+        volumes:
+            - /server/data/nzbhydra2/config:/config
+            - /server/downloads/complete:/downloads
+        environment:
+            - PUID=1000
+            - PGID=1000
+        restart: unless-stopped
+        
+    prowlarr:
+        container_name: prowlarr
+        image: linuxserver/prowlarr:develop
+        ports:
+            - "9696:9696"
+        volumes:
+            - /server/data/prowlarr/config:/config
+        environment:
+            - PUID=1000
+            - PGID=1000
+        restart: unless-stopped
+
+    httpd-home:
+        container_name: httpd-home
+        image: httpd:latest
+        ports:
+            - "60000:80"
+        volumes:
+            - /server/data/apache/home:/usr/local/apache2/htdocs
+        restart: unless-stopped  
+   
+    httpd-ovpn:
+        container_name: httpd-ovpn
+        image: httpd:latest
+        ports:
+            - "60001:80"
+        volumes:
+            - /server/data/apache/ovpn:/usr/local/apache2/htdocs
+        restart: unless-stopped 
+
+    jellyfin-cctv:
+        container_name: jellyfin-cctv
+        image: linuxserver/jellyfin:latest
+        ports:
+            - "8097:8096"
+        volumes:
+            - /server/data/jellyfin/config_cctv:/config
+            - /home/ftpuser/ftp/upload:/data/cctv
+        environment:
+            - PUID=1001
+            - PGID=1001
+            - NVIDIA_VISIBLE_DEVICES=all
+            - NVIDIA_DRIVER_CAPABILITIES=all
+            - JELLYFIN_PublishedServerUrl=https://cctv.kenh108.ie
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - capabilities: [gpu]
+        restart: unless-stopped
+
+    db-kenh108:
+        container_name: db-kenh108
+        image: mariadb:latest
+        volumes:
+            - /server/data/kenh108-website/database:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=kenneth12
+            - MYSQL_DATABASE=kenh108-website
+            - MYSQL_USER=kenh108
+            - MYSQL_PASSWORD=kenneth
+        restart: unless-stopped
+
+    wordpress:
+        container_name: wordpress
+        image: wordpress:latest
+        ports:
+            - "7171:80" 
+        volumes:
+            - /server/data/kenh108-website/website:/var/www/html
+        environment:
+            - WORDPRESS_DB_HOST=db-kenh108
+            - WORDPRESS_DB_USER=kenh108
+            - WORDPRESS_DB_PASSWORD=kenneth
+            - WORDPRESS_DB_NAME=kenh108-website
+        restart: unless-stopped
+        depends_on:
+            - db-kenh108
+
+    searxng:
+        container_name: searxng
+        image: searxng/searxng:latest
+        ports:
+            - "6969:8080"
+        volumes:
+            - ~/server/config/searxng:/etc/searxng
+        restart: unless-stopped
+
+    vaultwarden:
+        container_name: vaultwarden
+        image: vaultwarden/server:latest
+        ports:
+            - "2323:80"
+        volumes:
+            - /server/data/vaultwarden:/data
+        environment:
+            - SIGNUPS_ALLOWED=false
+        restart: unless-stopped
+
+    jellyseerr:
+        container_name: jellyseerr
+        image: fallenbagel/jellyseerr:latest
+        ports: 
+            - "5055:5055"
+        environment:
+            - LOG_LEVEL=debug
+        volumes:
+            - jellyseerr:/app/config
+        restart: unless-stopped
+        
+volumes:
+    jellyseerr:
+
+networks:
+    default:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.16.0.0/16
