@@ -8,3 +8,4 @@ Configs used for my linux machines
 - Fully configure jumphost
 - Install jellyseer on server
 - Distill and synthesize update files, and upload to github
+- Update cert for internal domains
