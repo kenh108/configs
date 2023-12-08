@@ -9,3 +9,4 @@ Configs used for my linux machines
 - Install jellyseer on server
 - Distill and synthesize update files, and upload to github
 - Update cert for internal domains
+- Upgrade server and vps to debian 12 from debian 11
