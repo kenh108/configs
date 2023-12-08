@@ -8,5 +8,5 @@ Configs used for my linux machines
 - Fully configure jumphost
 - Install jellyseer on server
 - Distill and synthesize update files, and upload to github
-- Update cert for internal domains
+- Update script to restart nginx to propogate new certs
 - Upgrade server and vps to debian 12 from debian 11
