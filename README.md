@@ -15,3 +15,4 @@ Configs used for my linux machines
 - Update script to restart nginx to propogate new certs
 - Upgrade server and vps to debian 12 from debian 11
 - Tidy wireguard diagrams and machine labels in readme
+- Collate all files required for zsh and powerlevel10k setup (dependencies can be installed on system afterwards as required)
