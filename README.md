@@ -16,3 +16,4 @@ Configs used for my linux machines
 - Upgrade server and vps to debian 12 from debian 11
 - Tidy wireguard diagrams and machine labels in readme
 - Collate all files required for zsh and powerlevel10k setup (dependencies can be installed on system afterwards as required)
+- Change hostnames to match {purpose}-{os}
