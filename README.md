@@ -7,8 +7,7 @@ Configs used for my linux machines
 - Set up ssh on jumphost
 - Set up jumphost:
   - SSH setup
-  - ZSH configs setup
-  - Tmux setup
+  - Add alias to machines ( jumphost -> ssh jumphost)
   - Btrfs setup
 - Install jellyseer on server
 - Distill and synthesize update files, and upload to github ( maybe will forget about )
